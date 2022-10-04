@@ -5,7 +5,7 @@ const canchaController = {
     crearCancha: async(req, res) => {
         try{
             if(req.user.role === "admin"){
-                cancha = await new CanchaModel(req.body).save()
+                let cancha = await new CanchaModel(req.body).save()
                 res.status(201).json({
                     message: "Cancha creada con exito",
                     response: cancha._id,
@@ -91,9 +91,9 @@ const canchaController = {
     TodasCanchas: async (req, res) => {
         const query = {}
         let canchas
-        if(req.query.city){
-            let regExp = new RegExp(`^${req.query.city}`,"i")
-            query.city = regExp
+        if(req.query.name){
+            let regExp = new RegExp(`^${req.query.name}`,"i")
+            query.name = regExp
         }
         try{
             canchas = await CanchaModel.find(query)
