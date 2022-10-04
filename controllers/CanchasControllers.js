@@ -1,4 +1,5 @@
 const { resolveInclude } = require('ejs')
+const Cancha = require('../models/Canchas')
 const CanchaModel = require('../models/Canchas')
 
 const canchaController = {
@@ -26,7 +27,7 @@ const canchaController = {
         }
     },
 
-    modificarCancha: async (req, res) => {
+    editarCancha: async (req, res) => {
         const {id} = req.params
         const {role} = req.user
         const {name, user, city, price, image, likes, description } = req.body
@@ -139,6 +140,68 @@ const canchaController = {
             console.log(error)
             res.status(400).json({
                 message: "Error, cancha no encontrada",
+                success: false
+            })
+        }
+    },
+
+    likeDislike: async (req, res) => {
+        let {canchaId} = req.params
+        let {id} = req.user
+
+        try{
+            let likedCancha = await CanchaModel.findOne({_id:canchaId})
+            if(likedCancha && likedCancha.likes.includes(id)){
+                likedCancha.likes.pull(id)
+                await likedCancha.save()
+                res.status(200).json({
+                    message: "dislike",
+                    response: likedCancha.likes,
+                    success: true
+                })
+            } else if(likedCancha && !likedCancha.likes.includes(id)){
+                likedCancha.likes.push(id)
+                await likedCancha.save()
+                res.status(200).json({
+                    message: "like",
+                    response: likedCancha.likes,
+                    success: true
+                })
+            } else {
+                res.status(404).json({
+                    message: "Cancha no encontrada",
+                    success: false
+                })
+            }
+        }catch(error){
+            console.log(error)
+            res.status(400).json({
+                message: "Error, algo salio mal",
+                success: false
+            })
+        }
+    },
+
+    porUsuario: async (req, res) => {
+        try{
+            let canchas = await CanchaModel.find({usuario: req.user.userId.toString()})
+            .populate("usuario", {name:1, photo:1})
+            if(canchas){
+                res.status(200).json({
+                    message: "Canchas encontradas",
+                    response: canchas,
+                    success: true
+                })
+            } else {
+                res.status(404).json({
+                    message: "Canchas no encontradas",
+                    success: false
+                })
+            }
+        }catch(error){
+            console.log(error)
+            res.status(400).json({
+                message: "Error, algo salio mal",
                 success: false
             })
         }
