@@ -2,16 +2,18 @@ const Product = require('../models/Products')
 
 const productController ={
     create: async(req, res)=>{
+        const{name, image, price,description}=req.body
         try{
          let product = await new Product(req.body).save()
-         res.status(201).json({
-            messege:"Product creado con exito",
+         
+         if(product){res.status(201).json({
+            messege:"Producto creado con exito",
             response:product,
             success:true
-         })
+         })}
         }catch(error){
             console.log(error)
-            res.status(400)({
+            res.status(400).json({
                 messege:"Error, producto no creado",
                 success:false
             })
