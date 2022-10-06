@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const fieldsRouter = require('./Fields')
 const commentsRouter = require('./Comments')
-const usersRouter = require('./Auth')
+const authRouter = require('./Auth')
 const productRouter = require('./product')
 
 /* GET home page. */
@@ -13,6 +13,6 @@ router.get('/', function(req, res, next) {
 
 router.use('/fields', fieldsRouter)
 router.use('/comments', commentsRouter)
-router.use('/users', usersRouter)
+router.use('/users', authRouter)
 router.use('/products', productRouter)
 module.exports = router;

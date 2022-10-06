@@ -12,16 +12,16 @@ passport.use(
         async (jwt_payload, done) => {
             console.log(jwt_payload)
             try{
-                let usuario = await User.findOne({_id:jwt_payload.id})
-                if(usuario){
-                    usuario = {
-                        id: usuario._id,
-                        name: usuario.name,
-                        photo: usuario.photo,
-                        mail: usuario.mail,
-                        role: usuario.role
+                let user = await User.findOne({_id:jwt_payload.id})
+                if(user){
+                    user = {
+                        id: user._id,
+                        name: user.name,
+                        photo: user.photo,
+                        mail: user.mail,
+                        role: user.role
                     }
-                    return done(null, usuario)
+                    return done(null, user)
                 } else {
                     return done(null, false)
                 }
