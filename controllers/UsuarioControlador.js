@@ -1,7 +1,7 @@
 const User = require('../models/User')
 const crypto = require('crypto')
 const bcryptjs = require('bcryptjs')
-// const sendMail = require('./sendMail')
+const sendMail = require('./sendMail')
 const jwt = require('jsonwebtoken')
 
 const usuarioControlador = {
@@ -154,7 +154,7 @@ const usuarioControlador = {
                 let verified = false
                 let role = 'usuario'
                 let code = crypto.randomBytes(15).toString('hex')
-                if(from === 'formulario'){
+                if(from === 'form'){
                     password = bcryptjs.hashSync(password, 10)
                     usuario = await new User({name, mail, password: [password], photo, from: [from], role, logged, verified, code}).save()
                     sendMail(mail, code)
@@ -221,7 +221,7 @@ const usuarioControlador = {
                         await usuario.save()
                         res.status(200).json({
                             message: "Bienvenido " + usuario.name + "!",
-                            response: {token: token},
+                            response: {usuario: usuarioLogeado, token: token},
                             success: true
                         })
                     } else {
@@ -240,11 +240,12 @@ const usuarioControlador = {
                             role: usuario.role,
                             from: usuario.from
                         }
+                        const token = jwt.sign({id: usuario._id}, process.env.JWT_TOKEN, {expiresIn: 60*60*24})
                         usuario.logged = true
                         await usuario.save()
                         res.status(200).json({
                             message: "Bienvenido " + usuario.name + "!",
-                            response: {usuario: usuarioLogeado},
+                            response: {usuario: usuarioLogeado, token: token},
                             success: true
                         })
                     } else {

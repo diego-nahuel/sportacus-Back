@@ -4,12 +4,12 @@ const canchaController = {
     crearCancha: async(req, res) => {
         let {name, user, city, price, image, likes, description} = req.body
         try{
-             let cancha = await new CanchaModel(req.body).save()
-             res.status(201).json({
-                 message: "Cancha creada con exito",
-                 response: cancha._id,
-                 success: true
-                })
+            let cancha = await new CanchaModel(req.body).save()
+            res.status(201).json({
+                message: "Cancha creada con exito",
+                response: cancha._id,
+                success: true
+            })
         } catch (error){
             console.log(error)
             res.status(400).json({
