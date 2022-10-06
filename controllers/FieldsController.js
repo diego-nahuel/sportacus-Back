@@ -138,22 +138,24 @@ const FieldsController = {
     },
 
     likeDislike: async (req, res) => {
-        let {fieldId} = req.body
-        let {id} = req.usuario
+        let {fieldId} = req.params
+        let {id} = req.user
 
         try{
-            let likedField = await FieldModel.findOne({_id:fieldId})
-            if(likedField && likedField.likes.includes(id)){
-                likedField.likes.pull(id)
-                await likedField.save()
+            let field = await FieldModel.findOne({_id:fieldId})
+            if(field && field.likes.includes(id)){
+                let likedField = await FieldModel.findOneAndUpdate({_id:fieldId}, {$pull:{likes:id}}, {new:true})
+                // likedField.likes.pull(id)
+                // await likedField.save()
                 res.status(200).json({
                     message: "dislike",
                     response: likedField.likes,
                     success: true
                 })
-            } else if(likedField && !likedField.likes.includes(id)){
-                likedField.likes.push(id)
-                await likedField.save()
+            } else if(field && !field.likes.includes(id)){
+                let likedField = await FieldModel.findOneAndUpdate({_id:fieldId}, {$push:{likes:id}}, {new:true})
+                // likedField.likes.push(id)
+                // await likedField.save()
                 res.status(200).json({
                     message: "like",
                     response: likedField.likes,
