@@ -6,7 +6,7 @@ const commentController = {
         const user = req.user.id
 
         try{
-            let comment = await new Comment({comment, field, product}, user).save()
+            comment = await new Comment({comment, field, product}, user).save()
             res.status(201).json({
                 message: "Comentario creado con exito",
                 response: comment._id,
