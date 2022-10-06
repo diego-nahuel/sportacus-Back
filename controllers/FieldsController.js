@@ -1,13 +1,13 @@
-const CanchaModel = require('../models/Canchas')
+const FieldModel = require('../models/Fields')
 
-const canchaController = {
-    crearCancha: async(req, res) => {
+const FieldsController = {
+    CreateField: async(req, res) => {
         let {name, user, city, price, image, likes, description} = req.body
         try{
-            let cancha = await new CanchaModel(req.body).save()
+            let field = await new FieldModel(req.body).save()
             res.status(201).json({
                 message: "Cancha creada con exito",
-                response: cancha._id,
+                response: field._id,
                 success: true
             })
         } catch (error){
@@ -19,16 +19,16 @@ const canchaController = {
         }
     },
 
-    editarCancha: async (req, res) => {
+    UpdateField: async (req, res) => {
         const {id} = req.params
         const {role} = req.user
         const {name, user, city, price, image, likes, description } = req.body
-        let cancha = {}
+        let field = {}
         try {
-            if (cancha) {
-                cancha = await CanchaModel.findOne({_id:id})
+            if (field) {
+                field = await FieldModel.findOne({_id:id})
                 if(role === "admin") {
-                    cancha = await CanchaModel.findOneAndUpdate({_id:id}, req.body, {new: true})
+                    cancha = await FieldModel.findOneAndUpdate({_id:id}, req.body, {new: true})
                     res.status(200).json({
                         message: "Cancha editada con exito",
                         response: cancha,
@@ -55,12 +55,12 @@ const canchaController = {
         }
     },
 
-    EliminarCancha: async(req, res) => {
+    DeleteField: async(req, res) => {
         const {id} = req.params
 
         try{
-            let cancha = await CanchaModel.findOneAndDelete({_id:id})
-            if(cancha){
+            let field = await FieldModel.findOneAndDelete({_id:id})
+            if(field){
                 res.status(200).json({
                     message: "Cancha eliminada con exito",
                     response: id,
@@ -81,19 +81,19 @@ const canchaController = {
         }
     },
 
-    TodasCanchas: async (req, res) => {
+    AllFields: async (req, res) => {
         const query = {}
-        let canchas
+        let fields
         if(req.query.name){
             let regExp = new RegExp(`^${req.query.name}`,"i")
             query.name = regExp
         }
         try{
-            canchas = await CanchaModel.find(query)
-            if(canchas.length > 0){
+            fields = await FieldModel.find(query)
+            if(fields.length > 0){
                 res.status(200).json({
                     message: "Estas son todas las canchas",
-                    response: canchas,
+                    response: fields,
                     success: true
                 })
             } else {
@@ -111,15 +111,15 @@ const canchaController = {
         }
     },
     
-    UnaCancha: async (req, res) => {
+    OneField: async (req, res) => {
         const {id} = req.params
 
         try{
-            let cancha = await CanchaModel.findOne({_id:id})
-            if(cancha){
+            let field = await FieldModel.findOne({_id:id})
+            if(field){
                 res.status(200).json({
                     message: "Esta es la ciudad que buscabas",
-                    response: cancha,
+                    response: field,
                     success: true
                 })
             } else {
@@ -138,26 +138,25 @@ const canchaController = {
     },
 
     likeDislike: async (req, res) => {
-        let {canchaId} = req.body
+        let {fieldId} = req.body
         let {id} = req.usuario
-        console.log(req.body)
-        console.log(req.usuario)
+
         try{
-            let likedCancha = await CanchaModel.findOne({_id:canchaId})
-            if(likedCancha && likedCancha.likes.includes(id)){
-                likedCancha.likes.pull(id)
-                await likedCancha.save()
+            let likedField = await FieldModel.findOne({_id:fieldId})
+            if(likedField && likedField.likes.includes(id)){
+                likedField.likes.pull(id)
+                await likedField.save()
                 res.status(200).json({
                     message: "dislike",
-                    response: likedCancha.likes,
+                    response: likedField.likes,
                     success: true
                 })
-            } else if(likedCancha && !likedCancha.likes.includes(id)){
-                likedCancha.likes.push(id)
-                await likedCancha.save()
+            } else if(likedField && !likedField.likes.includes(id)){
+                likedField.likes.push(id)
+                await likedField.save()
                 res.status(200).json({
                     message: "like",
-                    response: likedCancha.likes,
+                    response: likedField.likes,
                     success: true
                 })
             } else {
@@ -175,14 +174,14 @@ const canchaController = {
         }
     },
 
-    porUsuario: async (req, res) => {
+    ByUser: async (req, res) => {
         try{
-            let canchas = await CanchaModel.find({usuario: req.user.userId.toString()})
-            .populate("usuario", {name:1, photo:1})
-            if(canchas){
+            let fields = await FieldModel.find({user: req.user.userId.toString()})
+            .populate("user", {name:1, photo:1})
+            if(fields){
                 res.status(200).json({
                     message: "Canchas encontradas",
-                    response: canchas,
+                    response: fields,
                     success: true
                 })
             } else {
@@ -201,4 +200,4 @@ const canchaController = {
     }
 }
 
-module.exports = canchaController
+module.exports = FieldsController

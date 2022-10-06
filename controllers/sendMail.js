@@ -41,7 +41,7 @@ const sendMail = async (mail, code) => {
             <div>
             <h1>Hola, ${mail}!</h1>
             <h3>Estas un paso mas cerca de disfrutar de todos los beneficios de ser parte de Sportacus!</h3>
-            <a href='http://localhost:4000/auth/verify/${code}'>Click para verificar tu mail</a>
+            <a href='http://localhost:4000/usuarios/verify/${code}'>Click para verificar tu mail</a>
             <h3>Sportacus</h3>
             </div>
         `

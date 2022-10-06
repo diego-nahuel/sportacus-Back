@@ -11,8 +11,8 @@ const schema= new mongoose.Schema({
 })
 
 const Cancha = mongoose.model(
-    'canchas',
+    'fields',
     schema
 )
 
-module.exports = Cancha
+module.exports = Field
