@@ -1,23 +1,15 @@
-const { resolveInclude } = require('ejs')
-const Cancha = require('../models/Canchas')
 const CanchaModel = require('../models/Canchas')
 
 const canchaController = {
     crearCancha: async(req, res) => {
+        let {name, user, city, price, image, likes, description} = req.body
         try{
-            if(req.user.role === "admin"){
-                let cancha = await new CanchaModel(req.body).save()
-                res.status(201).json({
-                    message: "Cancha creada con exito",
-                    response: cancha._id,
-                    success: true
+             let cancha = await new CanchaModel(req.body).save()
+             res.status(201).json({
+                 message: "Cancha creada con exito",
+                 response: cancha._id,
+                 success: true
                 })
-            } else {
-                res.status(401).json({
-                    message: "No autorizado",
-                    success: true,
-                })
-            }
         } catch (error){
             console.log(error)
             res.status(400).json({
@@ -98,16 +90,16 @@ const canchaController = {
         }
         try{
             canchas = await CanchaModel.find(query)
-            if(canchas){
+            if(canchas.length > 0){
                 res.status(200).json({
-                    message: "Estan son todas las canchas",
+                    message: "Estas son todas las canchas",
                     response: canchas,
                     success: true
                 })
             } else {
-                res.status(404).json({
+                res.status(200).json({
                     message: "No se encontraron canchas",
-                    success: false,
+                    success: true,
                 })
             }
         }catch(error){
@@ -146,9 +138,10 @@ const canchaController = {
     },
 
     likeDislike: async (req, res) => {
-        let {canchaId} = req.params
-        let {id} = req.user
-
+        let {canchaId} = req.body
+        let {id} = req.usuario
+        console.log(req.body)
+        console.log(req.usuario)
         try{
             let likedCancha = await CanchaModel.findOne({_id:canchaId})
             if(likedCancha && likedCancha.likes.includes(id)){

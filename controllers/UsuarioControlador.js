@@ -57,7 +57,7 @@ const usuarioControlador = {
 
         try{
             let usuario = await User.findOne({_id:id})
-            .populate('canchas', {name:1, city:1})
+            // .populate('canchas', {name:1, city:1})
             if(usuario){
                 res.status(200).json({
                     message: "Usuario encontrado",
@@ -200,7 +200,7 @@ const usuarioControlador = {
     iniciarSesion: async (req, res) => {
         const {mail, password, from} = req.body
         try{
-            let usuario = await User.findOne(mail)
+            let usuario = await User.findOne({mail})
             if(!usuario){
                 res.status(404).json({
                     message: "El usuario no existe, por favor registrate",
@@ -221,7 +221,7 @@ const usuarioControlador = {
                         await usuario.save()
                         res.status(200).json({
                             message: "Bienvenido " + usuario.name + "!",
-                            response: {usuario: usuarioLogeado, token: token},
+                            response: {token: token},
                             success: true
                         })
                     } else {
@@ -249,7 +249,7 @@ const usuarioControlador = {
                         })
                     } else {
                         res.status(400).json({
-                            message: "Credenciales invalidas",
+                            message: "Usuario o contraseña incorrectos",
                             success: false
                         })
                     }
