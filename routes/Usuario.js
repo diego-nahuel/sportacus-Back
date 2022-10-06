@@ -1,5 +1,5 @@
-const express = require('express');
-const router = express.Router();
+var express = require('express');
+var router = express.Router();
 let passport = require('../config/passport')
 let adminPassport = require('../config/adminPassport')
 const {crearUsuario,
@@ -13,7 +13,7 @@ const {crearUsuario,
         verificarMail,
         verificarToken} = require('../controllers/UsuarioControlador')
 
-        router.post('/', crearUsuario)
+       // router.post('/', crearUsuario)
         router.get('/', todosUsuarios)
         router.get('/:id', unUsuario)
         router.delete('/:id', adminPassport.authenticate('jwt', {session: false}), eliminarUsuario)
