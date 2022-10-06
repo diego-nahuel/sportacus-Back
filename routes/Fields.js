@@ -15,7 +15,7 @@ const {CreateField,
     router.delete('/:id', passport.authenticate('jwt', {session: false}), DeleteField)
     router.get('/', AllFields)
     router.get('/:id', OneField)
-    router.patch('/likes/:canchaId', passport.authenticate('jwt', {session: false}, likeDislike))
-    router.get('/usuario/:id', passport.authenticate('jwt', {session: false}), ByUser)
+    router.patch('/likes/:fieldId', passport.authenticate('jwt', {session: false}, likeDislike))
+    router.get('/users/:id', passport.authenticate('jwt', {session: false}), ByUser)
 
     module.exports = router
