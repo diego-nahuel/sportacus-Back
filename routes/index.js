@@ -3,7 +3,7 @@ var router = express.Router();
 const canchasRouter = require('./Canchas')
 const comentariosRouter = require('./Comentario')
 const usuarioRouter = require('./Usuario')
-const productRouter = require('./producto')
+const productRouter = require('./product')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
