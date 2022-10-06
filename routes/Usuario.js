@@ -15,7 +15,7 @@ const {crearUsuario,
 
         router.post('/', crearUsuario)
         router.get('/', todosUsuarios)
-        router.get('/', unUsuario)
+        router.get('/:id', unUsuario)
         router.delete('/:id', adminPassport.authenticate('jwt', {session: false}), eliminarUsuario)
         router.patch('/:id', adminPassport.authenticate('jwt', {session: false}), editarUsuario)
         router.post('/signup', registrarse)
