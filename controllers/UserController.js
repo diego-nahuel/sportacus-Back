@@ -15,7 +15,7 @@ const UserController = {
 
         try{
             users = await User.find()
-            if(usuarios){
+            if(users){
                 res.status(200).json({
                     message: "Estos son todos los usuarios",
                     response: users,
