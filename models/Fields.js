@@ -10,9 +10,9 @@ const schema= new mongoose.Schema({
     description:{type: String, required:true}
 })
 
-const Cancha = mongoose.model(
-    'canchas',
+const Field = mongoose.model(
+    'fields',
     schema
 )
 
-module.exports = Cancha
+module.exports = Field
