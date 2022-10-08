@@ -185,7 +185,7 @@ const UserController = {
             let user = await User.findOne({mail})
             if(!user){
                 res.status(404).json({
-                    message: "El usuario no existe, por favor registrate",
+                    message: "Por favor ingresa el correo y la contraseña correctamente",
                     success: false
                 })
             } else if(user.verified) {
@@ -246,7 +246,7 @@ const UserController = {
         } catch(error) {
             console.log(error)
             res.status(400).json({
-                message: "Error, operacion sin exito",
+                message: "Error, operación sin exito",
                 success: false
             })
         }
