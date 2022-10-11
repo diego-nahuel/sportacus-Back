@@ -7,7 +7,7 @@ const schema = new mongoose.Schema({
     description: { type: String, required: true },
     stock: { type: String, required: true },
     sport: { type: String, required: true },
-    type: [{ type: String, required: true }],
+    type: [{ type: String }],
     comments: [{ type: mongoose.Types.ObjectId, ref: 'comments' }]
 })
 
