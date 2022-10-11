@@ -6,7 +6,7 @@ const schema = new mongoose.Schema({
     price: { type: Number, required: true },
     description: { type: String, required: true },
     stock: { type: String, required: true },
-    sport: [{ type: String, required: true }],
+    sport: { type: String, required: true },
     type: [{ type: String, required: true }],
     comments: [{ type: mongoose.Types.ObjectId, ref: 'comments' }]
 })
