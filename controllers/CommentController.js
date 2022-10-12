@@ -2,11 +2,11 @@ const Comment = require('../models/Comment')
 
 const commentController = {
     CreateComment: async (req, res) => {
-        const {comment, field, product} = req.body
+        const {comment, field} = req.body
         const user = req.user.id
 
         try{
-            comment = await new Comment({comment, field, product}, user).save()
+            await new Comment({comment, field, user}).save()
             res.status(201).json({
                 message: "Comentario creado con exito",
                 response: comment._id,
@@ -140,7 +140,39 @@ const commentController = {
                 success: false
             })
         }
-    }
+    },
+    
+    getCommentFromField: async(req,res)=>{
+        let query = {}
+        if(req.query.field){
+            query.field = req.query.field
+        }
+        try{
+            let comments = await Comment.find(query)
+            .populate('field', {name:1})
+            .populate('user', {photo:1, name: 1})
+
+            if(comments){
+                res.status(201).json({
+                    message: "Aqui estan los comentarios de esta cancha",
+                    response: comments,
+                    success: true
+                })
+            }else{
+                res.status(404).json({
+                    message: "No se encontraron comentarios en esta cancha",
+                    success: true
+                })
+            }
+
+        }catch(error){
+            console.log(error)
+            res.status(404).json({
+                message: "Error, no se puedo buscar comentarios",
+                success: true
+            })
+        }
+    },
 }
 
 module.exports = commentController
