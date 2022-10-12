@@ -2,11 +2,11 @@ const Comment = require('../models/Comment')
 
 const commentController = {
     CreateComment: async (req, res) => {
-        const {comment, field, product} = req.body
+        const {comment, field} = req.body
         const user = req.user.id
 
         try{
-            comment = await new Comment({comment, field, product}, user).save()
+            await new Comment({comment, field, user}).save()
             res.status(201).json({
                 message: "Comentario creado con exito",
                 response: comment._id,
