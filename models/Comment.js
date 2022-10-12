@@ -4,7 +4,7 @@ const schema = new mongoose.Schema({
     comment:{type: String, required: true},
     user:{type: mongoose.Types.ObjectId, ref: 'users', required: true},
     field:{type: mongoose.Types.ObjectId, ref: 'canchas'},
-    product:{type: mongoose.Types.ObjectId, ref: 'products'},
+    // product:{type: mongoose.Types.ObjectId, ref: 'products'},
 })
 const Comment = mongoose.model(
     'comments', 
