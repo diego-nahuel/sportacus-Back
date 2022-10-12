@@ -5,6 +5,7 @@ const schema = new mongoose.Schema({
     user:{type: mongoose.Types.ObjectId, ref: 'users', required: true},
     field:{type: mongoose.Types.ObjectId, ref: 'fields'},
     // product:{type: mongoose.Types.ObjectId, ref: 'products'},
+
 })
 const Comment = mongoose.model(
     'comments', 

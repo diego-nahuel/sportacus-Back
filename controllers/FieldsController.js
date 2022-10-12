@@ -1,16 +1,16 @@
 const FieldModel = require('../models/Fields')
 
 const FieldsController = {
-    CreateField: async(req, res) => {
-        let {name, user, city, price, image, likes, description} = req.body
-        try{
+    CreateField: async (req, res) => {
+        let { name, user, city, price, image, likes, description } = req.body
+        try {
             let field = await new FieldModel(req.body).save()
             res.status(201).json({
                 message: "Cancha creada con exito",
                 response: field._id,
                 success: true
             })
-        } catch (error){
+        } catch (error) {
             console.log(error)
             res.status(400).json({
                 message: "Error, cancha no credada",
@@ -20,15 +20,15 @@ const FieldsController = {
     },
 
     UpdateField: async (req, res) => {
-        const {id} = req.params
-        const {role} = req.user
-        const {name, user, city, price, image, likes, description } = req.body
+        const { id } = req.params
+        const { role } = req.user
+        const { name, user, city, price, image, likes, description } = req.body
         let field = {}
         try {
             if (field) {
-                field = await FieldModel.findOne({_id:id})
-                if(role === "admin") {
-                    cancha = await FieldModel.findOneAndUpdate({_id:id}, req.body, {new: true})
+                field = await FieldModel.findOne({ _id: id })
+                if (role === "admin") {
+                    cancha = await FieldModel.findOneAndUpdate({ _id: id }, req.body, { new: true })
                     res.status(200).json({
                         message: "Cancha editada con exito",
                         response: cancha,
@@ -44,9 +44,9 @@ const FieldsController = {
                 res.status(404).json({
                     message: "Cancha no encontrada",
                     success: false
-            })
+                })
             }
-        } catch(error) {
+        } catch (error) {
             console.log(error)
             res.status(400).json({
                 message: "Error, cancha no editada",
@@ -55,12 +55,12 @@ const FieldsController = {
         }
     },
 
-    DeleteField: async(req, res) => {
-        const {id} = req.params
+    DeleteField: async (req, res) => {
+        const { id } = req.params
 
-        try{
-            let field = await FieldModel.findOneAndDelete({_id:id})
-            if(field){
+        try {
+            let field = await FieldModel.findOneAndDelete({ _id: id })
+            if (field) {
                 res.status(200).json({
                     message: "Cancha eliminada con exito",
                     response: id,
@@ -72,7 +72,7 @@ const FieldsController = {
                     success: false
                 })
             }
-        }catch(error){
+        } catch (error) {
             console.log(error)
             res.status(400).json({
                 message: "Error, cancha no eliminada",
@@ -84,13 +84,13 @@ const FieldsController = {
     AllFields: async (req, res) => {
         const query = {}
         let fields
-        if(req.query.name){
-            let regExp = new RegExp(`^${req.query.name}`,"i")
+        if (req.query.name) {
+            let regExp = new RegExp(`^${req.query.name}`, "i")
             query.name = regExp
         }
-        try{
+        try {
             fields = await FieldModel.find(query)
-            if(fields.length > 0){
+            if (fields.length > 0) {
                 res.status(200).json({
                     message: "Estas son todas las canchas",
                     response: fields,
@@ -102,7 +102,7 @@ const FieldsController = {
                     success: true,
                 })
             }
-        }catch(error){
+        } catch (error) {
             console.log(error)
             res.status(400).json({
                 message: "Error, canchas no encontradas",
@@ -110,13 +110,13 @@ const FieldsController = {
             })
         }
     },
-    
-    OneField: async (req, res) => {
-        const {id} = req.params
 
-        try{
-            let field = await FieldModel.findOne({_id:id})
-            if(field){
+    OneField: async (req, res) => {
+        const { id } = req.params
+
+        try {
+            let field = await FieldModel.findOne({ _id: id })
+            if (field) {
                 res.status(200).json({
                     message: "Esta es la ciudad que buscabas",
                     response: field,
@@ -128,7 +128,7 @@ const FieldsController = {
                     success: false
                 })
             }
-        } catch(error){
+        } catch (error) {
             console.log(error)
             res.status(400).json({
                 message: "Error, cancha no encontrada",
@@ -138,13 +138,13 @@ const FieldsController = {
     },
 
     likeDislike: async (req, res) => {
-        let {fieldId} = req.params
-        let {id} = req.user
+        let { fieldId } = req.params
+        let { id } = req.user
 
-        try{
-            let field = await FieldModel.findOne({_id:fieldId})
-            if(field && field.likes.includes(id)){
-                let likedField = await FieldModel.findOneAndUpdate({_id:fieldId}, {$pull:{likes:id}}, {new:true})
+        try {
+            let field = await FieldModel.findOne({ _id: fieldId })
+            if (field && field.likes.includes(id)) {
+                let likedField = await FieldModel.findOneAndUpdate({ _id: fieldId }, { $pull: { likes: id } }, { new: true })
                 // likedField.likes.pull(id)
                 // await likedField.save()
                 res.status(200).json({
@@ -152,8 +152,8 @@ const FieldsController = {
                     response: likedField.likes,
                     success: true
                 })
-            } else if(field && !field.likes.includes(id)){
-                let likedField = await FieldModel.findOneAndUpdate({_id:fieldId}, {$push:{likes:id}}, {new:true})
+            } else if (field && !field.likes.includes(id)) {
+                let likedField = await FieldModel.findOneAndUpdate({ _id: fieldId }, { $push: { likes: id } }, { new: true })
                 // likedField.likes.push(id)
                 // await likedField.save()
                 res.status(200).json({
@@ -167,7 +167,7 @@ const FieldsController = {
                     success: false
                 })
             }
-        }catch(error){
+        } catch (error) {
             console.log(error)
             res.status(400).json({
                 message: "Error, algo salio mal",
@@ -177,10 +177,10 @@ const FieldsController = {
     },
 
     ByUser: async (req, res) => {
-        try{
-            let fields = await FieldModel.find({user: req.user.userId.toString()})
-            .populate("user", {name:1, photo:1})
-            if(fields){
+        try {
+            let fields = await FieldModel.find({ user: req.user.userId.toString() })
+                .populate("user", { name: 1, photo: 1 })
+            if (fields) {
                 res.status(200).json({
                     message: "Canchas encontradas",
                     response: fields,
@@ -192,7 +192,7 @@ const FieldsController = {
                     success: false
                 })
             }
-        }catch(error){
+        } catch (error) {
             console.log(error)
             res.status(400).json({
                 message: "Error, algo salio mal",
