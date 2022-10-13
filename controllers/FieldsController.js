@@ -88,6 +88,15 @@ const FieldsController = {
             let regExp = new RegExp(`^${req.query.name}`, "i")
             query.name = regExp
         }
+        if (req.query.sport) {
+            let regExp = new RegExp(`^${req.query.sport}`, "i")
+            query.sport = regExp
+        }
+        if (req.query.city) {
+            let regExp = new RegExp(`^${req.query.city}`, "i")
+            query.city = regExp
+        }
+        
         try {
             fields = await FieldModel.find(query)
             if (fields.length > 0) {

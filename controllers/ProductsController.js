@@ -89,6 +89,11 @@ const productController = {
             let regExp = new RegExp(`^${req.query.name}`, "i")
             query.name = regExp
         }
+        if (req.query.sport) {
+            let regExp = new RegExp(`^${req.query.sport}`, "i")
+            query.sport = regExp
+        }
+
         try {
             products = await Product.find(query)
             if (products) {
