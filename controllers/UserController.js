@@ -203,7 +203,7 @@ const UserController = {
                         await user.save()
                         res.status(200).json({
                             message: "Bienvenido " + user.name + "!",
-                            response: {user: loggedUser, token: token},
+                            response: {user: user, token: token},
                             success: true
                         })
                     } else {
