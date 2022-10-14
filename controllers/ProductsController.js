@@ -94,13 +94,11 @@ const productController = {
         //     query.name = regExp
         // }
         if (req.query.name) {
-            const input = req.query.name
-            query.name = { $regex: '^' + input, $options: 'i' }
-            console.log(query.name);
+            query.name = req.query.name
         }
 
         try {
-            if(!query.sport && req.query.name === "all") {
+            if(!query.sport && query.name === "all") {
                 products = await Product.find()
                 res.status(200).json({
                     success: true,
@@ -114,15 +112,14 @@ const productController = {
                     response: products,
                 })
             } else if(query.name && !query.sport) {
-                products = await Product.find({name:query.name})
+                products = await Product.find({name:{$regex:"^" + query.name}})
                 res.status(200).json({
                     success: true,
                     message: "Estos son todos los productos",
                     response: products,
                 })
             } else{
-                //products = await Product.find({name:{$regex:"^"+query.name},sport:query.sport})
-                products = await Product.find({name:query.name,sport:query.sport})
+                products = await Product.find({name:{$regex:"^"+query.name},sport:query.sport})
                 res.status(200).json({
                     success: true,
                     message: "Estos son todos los productos",
