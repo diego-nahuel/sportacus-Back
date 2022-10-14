@@ -85,27 +85,45 @@ const productController = {
     all: async (req, res) => {
         let products
         let query = {}
-        if (req.query.name) {
-            let regExp = new RegExp(`^${req.query.name}`, "i")
-            query.name = regExp
-        }
+
         if (req.query.sport) {
-            let regExp = new RegExp(`^${req.query.sport}`, "i")
-            query.sport = regExp
+            query.sport = req.query.sport
+        }
+        // if (req.query.name) {
+        //     let regExp = new RegExp(`^${req.query.name}`, "i")
+        //     query.name = regExp
+        // }
+        if (req.query.name) {
+            query.name = req.query.name
         }
 
         try {
-            products = await Product.find(query)
-            if (products) {
+            if(!query.sport && query.name === "all") {
+                products = await Product.find()
                 res.status(200).json({
+                    success: true,
                     message: "Estos son todos los productos",
                     response: products,
-                    success: true
+            })} else if (query.sport && query.name === "all"){
+                products = await Product.find({sport:query.sport})
+                res.status(200).json({
+                    success: true,
+                    message: "Estos son todos los productos",
+                    response: products,
                 })
-            } else {
-                res.status(404).json({
-                    message: 'No se encontraron productos',
-                    success: false
+            } else if(query.name && !query.sport) {
+                products = await Product.find({name:{$regex:"^" + query.name}})
+                res.status(200).json({
+                    success: true,
+                    message: "Estos son todos los productos",
+                    response: products,
+                })
+            } else{
+                products = await Product.find({name:{$regex:"^"+query.name},sport:query.sport})
+                res.status(200).json({
+                    success: true,
+                    message: "Estos son todos los productos",
+                    response: products,
                 })
             }
         } catch (error) {
