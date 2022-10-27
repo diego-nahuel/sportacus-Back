@@ -1,15 +1,15 @@
 const Comment = require('../models/Comment')
 
-const comentarioController = {
-    crearComentario: async (req, res) => {
-        const {comment, cancha, product} = req.body
+const commentController = {
+    CreateComment: async (req, res) => {
+        const {comment, field} = req.body
         const user = req.user.id
 
         try{
-            let comentario = await new Comment({comment, cancha, product}, user).save()
+            await new Comment({comment, field, user}).save()
             res.status(201).json({
                 message: "Comentario creado con exito",
-                response: comentario._id,
+                response: comment._id,
                 success: true
             })
         } catch(error){
@@ -21,23 +21,23 @@ const comentarioController = {
         }
     },
     
-    todosComentarios: async (req, res) => {
+    AllComments: async (req, res) => {
         let query = {}
-        if(req.query.cancha){
-            query.cancha = req.query.cancha
+        if(req.query.field){
+            query.field = req.query.field
         }
         if(req.query.user){
             query.user = req.query.user
         }
 
         try{
-            let comentario = await Comment.find(query)
-            .populate("cancha", {name:1, city:1})
+            let comment = await Comment.find(query)
+            .populate("field", {name:1, city:1})
             .populate("user", {name:1, photo:1})
-            if(comentario){
+            if(comment){
                 res.status(200).json({
                     message: "Aqui estan los comentarios",
-                    response: comentario,
+                    response: comment,
                     success: true
                 })
             } else {
@@ -55,20 +55,20 @@ const comentarioController = {
         }
     },
 
-    unComentario: async (req, res) => {
+    OneComment: async (req, res) => {
         const {id} = req.params
 
         try{
-            let comentario = await Comment.findOne({_id:id})
-            if(comentario){
+            let comment = await Comment.findOne({_id:id})
+            if(comment){
                 res.status(200).json({
                     message: "Aqui esta el comentario",
-                    response: comentario,
+                    response: comment,
                     success: true
                 })
             } else {
                 res.status(404).json({
-                    message: "Mensaje no existente",
+                    message: "El comentario no existe",
                     success: true
                 })
             }
@@ -81,17 +81,17 @@ const comentarioController = {
         }
     },
 
-    editarComentario: async (req, res) => {
+    UpdateComment: async (req, res) => {
         const {comment, cancha} = req.body
         const {id, role} = req.user
 
         try{
-            let comentario = await Comment.findOneAndUpdate({_id:id}, {commentario: req.body.data}, {new: true})
-            if(comentario){
+            let comment = await Comment.findOneAndUpdate({_id:id}, {comment: req.body.data}, {new: true})
+            if(comment){
                 if(comment.user.toString() === userId.toString() || role === 'admin'){
                     res.status(200).json({
                         message: "Comentario editado con exito",
-                        response: comentario,
+                        response: comment,
                         success: true
                     })
                 } else {
@@ -115,16 +115,16 @@ const comentarioController = {
         }
     },
 
-    eliminarComentario: async (req, res) => {
+    DeleteComment: async (req, res) => {
         const {id, role} = req.user
 
         try{
-            let comentario = await Comment.findOne({_id:id})
-            if(comentario.user.toString() === userId.toString() || role === 'admin'){
+            let comment = await Comment.findOne({_id:id})
+            if(comment.user.toString() === userId.toString() || role === 'admin'){
                 await Comment.findOneAndDelete({_id:id})
                 res.status(200).json({
                     message: "Comentario eliminado con exito",
-                    response: comentario._id,
+                    response: comment._id,
                     success: true
                 })
             } else {
@@ -140,7 +140,39 @@ const comentarioController = {
                 success: false
             })
         }
-    }
+    },
+    
+    getCommentFromField: async(req,res)=>{
+        let query = {}
+        if(req.query.field){
+            query.field = req.query.field
+        }
+        try{
+            let comments = await Comment.find(query)
+            .populate('field', {name:1})
+            .populate('user', {photo:1, name: 1})
+
+            if(comments){
+                res.status(201).json({
+                    message: "Aqui estan los comentarios de esta cancha",
+                    response: comments,
+                    success: true
+                })
+            }else{
+                res.status(404).json({
+                    message: "No se encontraron comentarios en esta cancha",
+                    success: true
+                })
+            }
+
+        }catch(error){
+            console.log(error)
+            res.status(404).json({
+                message: "Error, no se puedo buscar comentarios",
+                success: true
+            })
+        }
+    },
 }
 
-module.exports = comentarioController
+module.exports = commentController
